@@ -1,13 +1,13 @@
 import numpy as np
 
-def load_data(filename, leading_row=1, leading_column=1):
+def load_data(filename, leading_row=1, leading_column=1, delimiter=','):
     with open(filename, 'rb') as f:
         input_matrix = f.read().splitlines()
         output_matrix = []
         for i, row in enumerate(input_matrix):
             if i <= leading_row:
                 continue
-            row_data = row.split(',')
+            row_data = row.split(delimiter)
             row_append = []
             for j, ele in enumerate(row_data):
                 if j <= leading_column:

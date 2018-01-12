@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from Utils import load_data
-from MatrixFactorization import MatrixFactorization
+from MatrixFactorization import DNNMF
 
 if __name__ == '__main__':
     # input_m = load_data('./playtimes.csv',
@@ -16,29 +16,31 @@ if __name__ == '__main__':
                         [5, 5, 1, 3, 1, 2, 0, 2, 0, 0],
                         [2, 2, 2, 4, 0, 0, 1, 0, 5, 2]],
                        dtype=np.float32)
-    # input_m = np.divide(input_m, input_m.max())
+
     shape = input_m.shape
     print 'input width: ', shape[0]
     print 'input height: ', shape[1]
 
     input_df = pd.DataFrame(input_m)
 
-    mf = MatrixFactorization(input_df,
-                             rank=2,
-                             lr=0.001,
-                             steps=100000)
+    mf = DNNMF(input_df,
+               4,
+               rank=2,
+               lr=0.001,
+               steps=100000)
 
-    W, H, b = mf.train(enable_b=True)
+    W, H, bw, bh, WH = mf.train()
 
     print '=' * 50
     print 'W: \n', W
     print '=' * 50
     print 'H: \n', H
     print '=' * 50
-    print 'b: \n', b
+    print 'bw: \n', bw
+    print '=' * 50
+    print 'bh: \n', bh
 
-    prediction = np.add(np.dot(W, H), b).round()
-    # prediction = np.dot(W, H).round()
+    prediction = WH.round()
     print '=' * 50
     print 'prediction: \n', prediction
     print '=' * 50
