@@ -16,7 +16,13 @@ if __name__ == '__main__':
                         [5, 5, 1, 3, 1, 2, 0, 2, 0, 0],
                         [2, 2, 2, 4, 0, 0, 1, 0, 5, 2]],
                        dtype=np.float32)
-
+    #input_m = np.array([[0, 0, 0, 4, 2, 0, 0, 0, 0, 0],
+    #                    [4, 0, 0, 0, 4, 0, 0, 0, 0, 5],
+    #                    [0, 3, 0, 0, 0, 0, 5, 0, 0, 0],
+    #                    [0, 0, 1, 0, 0, 2, 0, 0, 0, 0],
+    #                    [0, 0, 0, 0, 0, 0, 0, 3, 0, 4],
+    #                    [3, 2, 0, 0, 0, 0, 0, 0, 5, 0]],
+    #                   dtype=np.float32)
     shape = input_m.shape
     print 'input width: ', shape[0]
     print 'input height: ', shape[1]
@@ -24,10 +30,10 @@ if __name__ == '__main__':
     input_df = pd.DataFrame(input_m)
 
     mf = DNNMF(input_df,
-               4,
-               rank=2,
-               lr=0.001,
-               steps=100000)
+               2,
+               rank=3,
+               lr=0.01,
+               steps=50000)
 
     W, H, bw, bh, WH = mf.train()
 

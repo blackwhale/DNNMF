@@ -15,7 +15,7 @@ class DNNMF:
         self.shape = input_matrix.values.shape
         self.lr = lr
         self.steps = steps
-        self.inner_size = (self.shape[0] + self.shape[1]) * (1 + self.rank)
+        self.inner_size = (self.shape[0] + self.shape[1]) * (1 + self.rank) * 3
 
     def _layers(self, flatten_matrix):
         layer_list = []
@@ -63,7 +63,12 @@ class DNNMF:
         l = tf.constant(0.1)
         matrix_sums = tf.add(tf.reduce_sum(tf.pow(H, 2)), tf.reduce_sum(tf.pow(W, 2)))
         bias_sums = tf.add(tf.reduce_sum(tf.pow(BW, 2)), tf.reduce_sum(tf.pow(BH, 2)))
+
+        tmp = tf.clip_by_value(WH, 1.0, 5.0)
+        penalty = tf.reduce_sum(tf.pow(tf.boolean_mask(WH, ~tf_mask) - tf.boolean_mask(tmp, ~tf_mask), 2))
+
         parameter_sums = tf.add(matrix_sums, bias_sums)
+        parameter_sums = tf.add(parameter_sums, penalty)
         regularizer = tf.multiply(parameter_sums, l)
 
         # cost = base_cost + regularization
